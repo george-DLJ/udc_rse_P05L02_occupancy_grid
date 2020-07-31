@@ -2,6 +2,7 @@
 #include <math.h>
 #include <vector>
 #include "src/matplotlibcpp.h" //Graph Library
+#include <string>
 
 using namespace std;
 namespace plt = matplotlibcpp;
@@ -78,12 +79,39 @@ void occupancyGridMapping(double Robotx, double Roboty, double Robottheta, doubl
 
 void visualization()
 {
-    //TODO: Initialize a plot named Map of size 300x150
-    
-    //TODO: Loop over the log odds values of the cells and plot each cell state. 
-    //Unkown state: green color, occupied state: black color, and free state: red color 
-    
-    //TODO: Save the image and close the plot 
+    int occupancyGridWidth = 300; //mapWidth / gridWidth;
+    int occupancyGridHeight = 150; //mapHeight / gridHeight;  
+    //DONE: Initialize a plot named Map of size 300x150
+    plt::title("Map"); //Set Title
+    plt::xlim(0,occupancyGridWidth ); //Set Limits
+    plt::ylim(0, occupancyGridHeight ); //Set Limits
+    //DONE: Loop over the log odds values of the cells and plot each cell state. 
+    //Unkown state: green color (g), occupied state: black color(k), and free state: red color(r) 
+// NOTE: do not use l0, locc and lfree values because they are used to log only.
+// NOTE 2: do not use square shape 's' because they have a black frame and overlap. better use point '.' instead.
+// see question: https://knowledge.udacity.com/questions/274331
+    for (int x = 0; x < occupancyGridWidth; x++) {
+        for (int y = 0; y < occupancyGridHeight; y++) {
+           // initialize to unknown state or l0)
+           //string colorshape = "gs";
+	   if (l[x][y] == 0 )
+	   {
+	      plt::plot({x}, {y}, "g."); //Plot Data unknown state (green)	
+	   }
+           else if(l[x][y] > 0 )
+           {
+               //colorshape = "ks"; Occupied (black)
+               plt::plot({x}, {y}, "k."); //Plot Data
+           }
+           else {
+	    //colorshape = "rs"; Free (red)
+	       plt::plot({x}, {y}, "r."); //Plot Data
+           }
+        }
+    }  
+    //DONE: Save the image and close the plot 
+    plt::save("./Images/occupancymap.png"); //Save Plot 
+    plt::clf(); // Close Plot
 }
 
 int main()
